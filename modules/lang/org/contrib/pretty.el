@@ -1,4 +1,5 @@
 ;;; lang/org/contrib/pretty.el -*- lexical-binding: t; -*-
+;;;###if (featurep! +pretty)
 
 (after! org
   (setq org-highlight-latex-and-related '(native script entities)))
