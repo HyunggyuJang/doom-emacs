@@ -22,18 +22,16 @@ results buffer.")
   :hook (doom-first-input . ivy-mode)
   :init
   (let ((standard-search-fn
-         (if (featurep! +prescient)
-             #'+ivy-prescient-non-fuzzy
-           #'ivy--regex-plus))
+         #'ivy--regex-plus)
         (alt-search-fn
          (if (featurep! +fuzzy)
              #'ivy--regex-fuzzy
            ;; Ignore order for non-fuzzy searches by default
            #'ivy--regex-ignore-order)))
     (setq ivy-re-builders-alist
-          `((counsel-rg     . #'ivy--regex-plus)
-            (swiper         . #'ivy--regex-plus)
-            (swiper-isearch . #'ivy--regex-plus)
+          `((counsel-rg     . ,standard-search-fn)
+            (swiper         . ,standard-search-fn)
+            (swiper-isearch . ,standard-search-fn)
             (t . ,alt-search-fn))
           ivy-more-chars-alist
           '((counsel-rg . 1)
