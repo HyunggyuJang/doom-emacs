@@ -22,9 +22,7 @@ results buffer.")
   :hook (doom-first-input . ivy-mode)
   :init
   (let ((standard-search-fn
-         (if (featurep! +prescient)
-             #'+ivy-prescient-non-fuzzy
-           #'ivy--regex-plus))
+         #'ivy--regex-plus)
         (alt-search-fn
          (if (featurep! +fuzzy)
              #'ivy--regex-fuzzy
