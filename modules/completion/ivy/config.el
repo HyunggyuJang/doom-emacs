@@ -31,9 +31,9 @@ results buffer.")
            ;; Ignore order for non-fuzzy searches by default
            #'ivy--regex-ignore-order)))
     (setq ivy-re-builders-alist
-          `((counsel-rg     . ,standard-search-fn)
-            (swiper         . ,standard-search-fn)
-            (swiper-isearch . ,standard-search-fn)
+          `((counsel-rg     . #'ivy--regex-plus)
+            (swiper         . #'ivy--regex-plus)
+            (swiper-isearch . #'ivy--regex-plus)
             (t . ,alt-search-fn))
           ivy-more-chars-alist
           '((counsel-rg . 1)
