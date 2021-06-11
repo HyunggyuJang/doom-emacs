@@ -654,7 +654,8 @@ can grow up to be fully-fledged org-mode buffers."
           org-startup-folded
           vc-handled-backends
           org-mode-hook
-          find-file-hook)
+          find-file-hook
+          org-roam-find-file-hook)
       (funcall orig-fn file)))
 
   ;; HACK With https://code.orgmode.org/bzg/org-mode/commit/48da60f4, inline
