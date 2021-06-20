@@ -641,8 +641,6 @@ can grow up to be fully-fledged org-mode buffers."
     :around #'org-get-agenda-file-buffer
     (let ((recentf-exclude (list (lambda (_file) t)))
           (doom-inhibit-large-file-detection t)
-          org-startup-indented
-          org-startup-folded
           vc-handled-backends
           org-mode-hook
           find-file-hook)
