@@ -17,45 +17,75 @@
 ;; library included with Doom).
 (setq coq-mode-abbrev-table '())
 
-(map! :after coq-mode
-      :map coq-mode-map
-      :localleader
-      "]"  #'proof-assert-next-command-interactive
-      "["  #'proof-undo-last-successful-command
-      "."  #'proof-goto-point
-      (:prefix ("l" . "layout")
-        "c" #'pg-response-clear-displays
-        "l" #'proof-layout-windows
-        "p" #'proof-prf)
-      (:prefix ("p" . "proof")
-        "i" #'proof-interrupt-process
-        "p" #'proof-process-buffer
-        "q" #'proof-shell-exit
-        "r" #'proof-retract-buffer)
-      (:prefix ("a" . "about/print/check")
-        "a" #'coq-Print
-        "A" #'coq-Print-with-all
-        "b" #'coq-About
-        "B" #'coq-About-with-all
-        "c" #'coq-Check
-        "C" #'coq-Check-show-all
-        "f" #'proof-find-theorems
-        (:prefix ("i" . "implicits")
+(after! coq-mode
+  (map! :map coq-mode-map
+        (:when (featurep! :emacs undo +tree)
+         "C-r" #'coq-redo
+         "u"   #'coq-undo)
+        :localleader
+        "]"  #'proof-assert-next-command-interactive
+        "["  #'proof-undo-last-successful-command
+        "."  #'proof-goto-point
+        (:prefix ("l" . "layout")
+         "c" #'pg-response-clear-displays
+         "l" #'proof-layout-windows
+         "p" #'proof-prf)
+        (:prefix ("p" . "proof")
+         "i" #'proof-interrupt-process
+         "p" #'proof-process-buffer
+         "q" #'proof-shell-exit
+         "r" #'proof-retract-buffer)
+        (:prefix ("a" . "about/print/check")
+         "a" #'coq-Print
+         "A" #'coq-Print-with-all
+         "b" #'coq-About
+         "B" #'coq-About-with-all
+         "c" #'coq-Check
+         "C" #'coq-Check-show-all
+         "f" #'proof-find-theorems
+         (:prefix ("i" . "implicits")
           "b" #'coq-About-with-implicits
           "c" #'coq-Check-show-implicits
           "i" #'coq-Print-with-implicits))
-      (:prefix ("g" . "goto")
-        "e" #'proof-goto-command-end
-        "l" #'proof-goto-end-of-locked
-        "s" #'proof-goto-command-start)
-      (:prefix ("i" . "insert")
-        "c" #'coq-insert-command
-        "e" #'coq-end-Section
-        "i" #'coq-insert-intros
-        "r" #'coq-insert-requires
-        "s" #'coq-insert-section-or-module
-        "t" #'coq-insert-tactic
-        "T" #'coq-insert-tactical))
+        (:prefix ("g" . "goto")
+         "e" #'proof-goto-command-end
+         "l" #'proof-goto-end-of-locked
+         "s" #'proof-goto-command-start)
+        (:prefix ("i" . "insert")
+         "c" #'coq-insert-command
+         "e" #'coq-end-Section
+         "i" #'coq-insert-intros
+         "r" #'coq-insert-requires
+         "s" #'coq-insert-section-or-module
+         "t" #'coq-insert-tactic
+         "T" #'coq-insert-tactical))
+  (when (featurep! :emacs undo +tree)
+    (map! :map coq-mode-map
+          "C-r" #'coq-redo
+          "u"   #'coq-undo)
+    (defun pg-in-protected-region-p ()
+      (< (point) (proof-queue-or-locked-end)))
+
+    (defmacro coq-wrap-edit (action)
+      `(if (or (not proof-locked-span)
+               (equal (proof-queue-or-locked-end) (point-min)))
+           (,action)
+         (,action)
+         (when (pg-in-protected-region-p)
+           (proof-goto-point))))
+
+    (defun coq-redo ()
+      (interactive)
+      (coq-wrap-edit undo-tree-redo))
+
+    (defun coq-undo ()
+      (interactive)
+      (coq-wrap-edit undo-tree-undo))
+
+    (add-hook 'coq-mode-hook #'undo-tree-mode)))
+
+
+
 
 
 ;; This package provides more than just code completion, so we load it whether
