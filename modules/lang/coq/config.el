@@ -19,9 +19,6 @@
 
 (after! coq-mode
   (map! :map coq-mode-map
-        (:when (featurep! :emacs undo +tree)
-         "C-r" #'coq-redo
-         "u"   #'coq-undo)
         :localleader
         "]"  #'proof-assert-next-command-interactive
         "["  #'proof-undo-last-successful-command
@@ -61,26 +58,28 @@
          "T" #'coq-insert-tactical))
   (when (featurep! :emacs undo +tree)
     (map! :map coq-mode-map
-          "C-r" #'coq-redo
-          "u"   #'coq-undo)
+          :n "C-r" #'coq-redo
+          :n "u"   #'coq-undo)
     (defun pg-in-protected-region-p ()
       (< (point) (proof-queue-or-locked-end)))
 
-    (defmacro coq-wrap-edit (action)
-      `(if (or (not proof-locked-span)
-               (equal (proof-queue-or-locked-end) (point-min)))
-           (,action)
-         (,action)
-         (when (pg-in-protected-region-p)
-           (proof-goto-point))))
-
     (defun coq-redo ()
       (interactive)
-      (coq-wrap-edit undo-tree-redo))
+      (if (or (not proof-locked-span)
+              (equal (proof-queue-or-locked-end) (point-min)))
+          (undo-tree-redo)
+        (undo-tree-redo)
+        (when (pg-in-protected-region-p)
+          (proof-goto-point))))
 
     (defun coq-undo ()
       (interactive)
-      (coq-wrap-edit undo-tree-undo))
+      (if (or (not proof-locked-span)
+              (equal (proof-queue-or-locked-end) (point-min)))
+          (undo-tree-undo)
+        (undo-tree-undo)
+        (when (pg-in-protected-region-p)
+          (proof-goto-point))))
 
     (add-hook 'coq-mode-hook #'undo-tree-mode)))
 
