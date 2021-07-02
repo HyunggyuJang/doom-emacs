@@ -16,9 +16,10 @@
     "C-a"    #'move-beginning-of-line
     "C-r"    #'evil-paste-from-register
     "C-u"    #'evil-delete-back-to-indentation
-    "C-v"    #'yank
-    "C-w"    #'doom/delete-backward-word
-    "C-z"    (cmd! (ignore-errors (call-interactively #'undo))))
+    ;; "C-v"    #'yank
+    ;; "C-w"    #'doom/delete-backward-word
+    ;; "C-z"    (cmd! (ignore-errors (call-interactively #'undo)))
+    )
 
   (define-key! :keymaps +default-minibuffer-maps
     "C-j"    #'next-line
