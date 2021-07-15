@@ -416,8 +416,8 @@ Continues comments if executed from a commented line. Consults
   ;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
   ;; Pressing it again will send you to the true bol. Same goes for C-e, except
   ;; it will ignore comments+trailing whitespace before jumping to eol.
-  (map! :gi "C-a" #'doom/backward-to-bol-or-indent
-        :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
+  (map! :g "C-a" #'doom/backward-to-bol-or-indent
+        :g "C-e" #'doom/forward-to-last-non-comment-or-eol
         ;; Standardizes the behavior of modified RET to match the behavior of
         ;; other editors, particularly Atom, textedit, textmate, and vscode, in
         ;; which ctrl+RET will add a new "item" below the current one and
