@@ -433,7 +433,7 @@ Continues comments if executed from a commented line. Consults
         ;; insert literal newline
         :gi "S-RET"         #'+default/newline
         :gi [S-return]      #'+default/newline
-        :gi "C-j"           #'+default/newline
+        :g "C-j"           #'+default/newline
 
         ;; Add new item below current (without splitting current line).
         :gi "C-RET"         #'+default/newline-below
